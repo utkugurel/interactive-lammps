@@ -1,0 +1,68 @@
+# lipit simulation
+
+####################################
+####  SET SIMULATION CONDITIONS
+####################################
+units         lj
+atom_style    full
+pair_style    lj/cut 2.5
+bond_style    harmonic
+special_bonds fene
+
+dimension     3
+boundary      p p p
+neighbor      0.8 bin
+
+read_data     lipit.data
+change_box all boundary p p f
+change_box all z delta -40.0 20.0 units box
+
+####################################
+####  DEFINE VARIABLES
+####################################
+variable velocityBullet equal -2
+variable radiusBullet equal 5
+variable hBullet equal 5+${radiusBullet}
+
+####################################
+#### CHOOSE THERMODYNAMIC OUTPUT
+####################################
+thermo  200
+thermo_style	custom step temp press ebond epair ke
+
+####################################
+#### CLAMP BOUNDARIES OF THE FILM
+####################################
+region hole cylinder z 0 0 20 -10.0 10.0 side in units box
+group hole region hole
+group film type 1 2
+group base subtract film hole
+
+fix nailed base setforce 0.0 0.0 0.0
+velocity base set 0.0 0.0 0.0 units box
+velocity hole create 0.1 239472
+
+####################################
+#### CREATE BULLET ABOVE THE FILM
+####################################
+lattice diamond 7.2 
+region 1 sphere 0 0 ${hBullet} ${radiusBullet} side in units box
+create_atoms 3 region 1 units box
+group indent type 3
+neigh_modify exclude group indent indent
+fix 1 indent rigid single
+velocity indent set 0.0 0.0 -2 units box
+
+####################################
+#### SHOOT!
+####################################
+fix nve1 hole nve 
+
+compute stressA all stress/atom NULL
+compute 1 indent ke
+fix kin all ave/time 1 1 10 c_1 file kinetic.data
+
+dump mydump all custom 200 Conf.dat id type x y z c_stressA[1] c_stressA[2] c_stressA[3]
+dump_modify mydump sort id
+
+run 8000
