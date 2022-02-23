@@ -1,7 +1,8 @@
 channels:
 - conda-forge
 dependencies:
-- notebook
 - lammps
 - nglview
 - MDAnalysis
+- numpy
+- matplotlib
