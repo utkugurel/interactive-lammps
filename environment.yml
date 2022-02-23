@@ -1,8 +1,0 @@
-channels:
-- conda-forge
-dependencies:
-- lammps
-- nglview
-- MDAnalysis
-- numpy
-- matplotlib
