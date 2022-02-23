@@ -4,5 +4,3 @@ dependencies:
 - lammps
 - nglview
 - MDAnalysis
-- matplotlib
-- numpy
