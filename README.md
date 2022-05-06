@@ -1,3 +1,3 @@
 # interactive-lammps
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/utkugurel/interactive-lammps/test)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/utkugurel/interactive-lammps/test?labpath=interactive-lammps.ipynb)
